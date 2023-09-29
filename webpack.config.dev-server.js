@@ -1,17 +1,19 @@
-const { merge } = require('webpack-merge');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const commonConfig = require('./webpack.config.common.js');
+const { merge } = require("webpack-merge");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const commonConfig = require("./webpack.config.common.js");
+const path = require("path");
 
 module.exports = merge(commonConfig, {
-  mode: 'development',
-  devServer: {
-    injectClient: false //workaround for bug https://github.com/webpack/webpack-dev-server/issues/2484
-  },
+  mode: "development",
   devtool: "inline-source-map",
+  watchOptions: {
+    aggregateTimeout: 500,
+    poll: 1000
+  },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html',
-      inject: 'head'
+      title: "Development",
+      template: path.resolve(__dirname, "src/index.html")
     })
   ]
 });
