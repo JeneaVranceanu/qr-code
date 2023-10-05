@@ -1,55 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>QR Code Styling</title>
-    </head>
-    <body>
-        <div id="canvas"></div>
-        <div id="canvas2"></div>
-        <script type="text/javascript">
-            const options = {
-              width: 500,
-              height: 500,
-              data: "h",
-              image: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
-              dotsOptions: {
-                type: "extra-rounded",
-                gradient: {
-                  type: "linear", //radial,
-                  rotation: Math.PI/2,
-                  colorStops: [{ offset: 0, color: 'blue' }, { offset: 0.5, color: 'red' }, { offset: 1, color: 'green' }]
-                },
-              },
-              cornersSquareOptions: {
-                type: "rounded",
-                gradient: {
-                  type: "linear",
-                  rotation: Math.PI * 0.2,
-                  colorStops: [{
-                    offset: 0,
-                    color: 'blue'
-                  }, {
-                    offset: 1,
-                    color: 'red'
-                  }]
-                },
-              },
-              imageOptions: {
-                crossOrigin: "anonymous",
-                margin: 30
-              }
-            };
-          const qrCode = new QRCodeStyling(options);
-          const qrCode2 = new QRCodeStyling({
-            ...options,
-            type: 'svg',
-          });
 
-            qrCode.append(document.getElementById("canvas"));
-            qrCode2.append(document.getElementById("canvas2"));
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Styling</title>
+</head>
 
-            // qrCode2.download()
-        </script>
-    </body>
+<body>
+  <div id="canvas"></div>
+  <div id="canvas2"></div>
+  <div id="canvas3"></div>
+  <script async type="text/javascript">
+    console.log("This script must load last")
+    const options = {
+      width: 500,
+      height: 500,
+      data: "eip155:0xcafecafecafecafecafecafecafecafecafecafe:2828",
+      type: 'canvas', // 'canvas' is default value but setting here for clarity
+      // This URL holds a rectangular (horizontal) image 
+      //image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Fibonacci_Squares.svg/1200px-Fibonacci_Squares.svg.png",
+      image: "https://2eff.lukso.dev/ipfs/QmS4Sb1bWC2xiDPfHvqV8urpzwjUQioqrzKRCXdmSNpDXA",
+      dotsOptions: {
+        type: "rounded",
+        gradient: {
+          type: "linear", //radial,
+          rotation: Math.PI / 4,
+          colorStops: [{ offset: 0, color: 'blue' }, { offset: 0.5, color: 'red' }, { offset: 1, color: 'green' }]
+        },
+      },
+      cornersSquareOptions: {
+        type: "rounded",
+        gradient: {
+          type: "linear",
+          rotation: Math.PI * 0.2,
+          colorStops: [{
+            offset: 0,
+            color: 'blue'
+          }, {
+            offset: 1,
+            color: 'red'
+          }]
+        },
+      },
+      imageOptions: {
+        imageSize: 0.18,
+        crossOrigin: "anonymous",
+        shape: 'circle',
+        borderWidth: 7,
+        borderColor: '#ffffff'
+      }
+    };
+    const qrCode = new QRCodeStyling(options);
+    const qrCode2 = new QRCodeStyling({
+      ...options,
+      type: 'svg',
+    });
+    const qrCode3 = new QRCodeStyling({
+      ...options,
+      dotsOptions: {
+        type: "extra-rounded",
+        color: "black"
+      },
+      cornersSquareOptions: {
+        type: "extra-rounded",
+        color: "black"
+      },
+      type: 'svg',
+    });
+
+    qrCode.append(document.getElementById("canvas"));
+    qrCode2.append(document.getElementById("canvas2"));
+    qrCode3.append(document.getElementById("canvas3"));
+
+    // qrCode2.download()
+  </script>
+</body>
+
 </html>

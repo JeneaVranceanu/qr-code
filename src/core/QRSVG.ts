@@ -72,11 +72,29 @@ export default class QRSVG {
     const count = qr.getModuleCount();
     const minSize = Math.min(this._options.width, this._options.height) - this._options.margin * 2;
     const dotSize = Math.floor(minSize / count);
+    const { imageOptions, qrOptions } = this._options;
+    const isCircleShape = imageOptions.shape === "circle";
+    // Stays 0 if `isCircleShape` is false
+    // Value is a radius/dotSize
+    let circleRadiusSquared = 0;
     let drawImageSize = {
       hideXDots: 0,
       hideYDots: 0,
       width: 0,
       height: 0
+    };
+    const imageCenterX = count / 2;
+    const imageCenterY = count / 2;
+    // A rectangle where we consider hiding QR code dots.
+    // Used only if there's an image and it succesfully loaded.
+    // Each coordinate is not a pixel value but an x,y of a QR code dot.
+    // e.g. a 500x500 QR code may have 36x36 number of dots,
+    // `xStart` and `yStart` could be set to 18 and `xEnd`, `yEnd` to 21 (in case of small image).
+    let qrCodeFreeRectangle = {
+      xStart: 0,
+      yStart: 0,
+      xEnd: 0,
+      yEnd: 0
     };
 
     this._qr = qr;
@@ -85,38 +103,69 @@ export default class QRSVG {
       //We need it to get image size
       await this.loadImage();
       if (!this._image) return;
-      const { imageOptions, qrOptions } = this._options;
       const coverLevel = imageOptions.imageSize * errorCorrectionPercents[qrOptions.errorCorrectionLevel];
-      const maxHiddenDots = Math.floor(coverLevel * count * count);
+      let maxHiddenDots = 0;
+      let imageWidth = this._image.width;
+      let imageHeight = this._image.height;
+
+      console.log("Original image w", imageWidth);
+      console.log("Original image w", imageHeight);
+
+      const maxSize = Math.max(this._image.width, this._image.height);
+      if (isCircleShape) {
+        imageWidth = maxSize;
+        imageHeight = maxSize;
+      }
+
+      maxHiddenDots =
+        imageHeight === imageWidth
+          ? Math.floor(coverLevel * count * count)
+          : (maxSize - Math.min(this._image.width, this._image.height)) / 2;
 
       drawImageSize = calculateImageSize({
-        originalWidth: this._image.width,
-        originalHeight: this._image.height,
+        originalWidth: imageWidth,
+        originalHeight: imageHeight,
         maxHiddenDots,
         maxHiddenAxisDots: count - 14,
         dotSize
       });
+
+      if (isCircleShape) {
+        console.log("drawImageSize.height", drawImageSize.height, dotSize, count);
+        circleRadiusSquared = Math.pow(drawImageSize.height / dotSize / 2, 2);
+        console.log("circleRadiusSquared", circleRadiusSquared);
+      }
+
+      qrCodeFreeRectangle = {
+        xStart: (count - drawImageSize.hideXDots) / 2,
+        yStart: (count - drawImageSize.hideYDots) / 2,
+        xEnd: (count + drawImageSize.hideXDots) / 2,
+        yEnd: (count + drawImageSize.hideYDots) / 2
+      };
     }
 
     this.clear();
     this.drawBackground();
-    this.drawDots((i: number, j: number): boolean => {
-      if (this._options.imageOptions.hideBackgroundDots) {
+    this.drawDots((x: number, y: number): boolean => {
+      if (this._image && this._options.imageOptions.hideBackgroundDots) {
         if (
-          i >= (count - drawImageSize.hideXDots) / 2 &&
-          i < (count + drawImageSize.hideXDots) / 2 &&
-          j >= (count - drawImageSize.hideYDots) / 2 &&
-          j < (count + drawImageSize.hideYDots) / 2
+          x >= qrCodeFreeRectangle.xStart &&
+          x < qrCodeFreeRectangle.xEnd &&
+          y >= qrCodeFreeRectangle.yStart &&
+          y < qrCodeFreeRectangle.yEnd
         ) {
+          if (isCircleShape) {
+            return !(Math.pow(x - imageCenterX, 2) + Math.pow(y - imageCenterY, 2) <= circleRadiusSquared);
+          }
           return false;
         }
       }
 
-      if (squareMask[i]?.[j] || squareMask[i - count + 7]?.[j] || squareMask[i]?.[j - count + 7]) {
+      if (squareMask[x]?.[y] || squareMask[x - count + 7]?.[y] || squareMask[x]?.[y - count + 7]) {
         return false;
       }
 
-      if (dotMask[i]?.[j] || dotMask[i - count + 7]?.[j] || dotMask[i]?.[j - count + 7]) {
+      if (dotMask[x]?.[y] || dotMask[x - count + 7]?.[y] || dotMask[x]?.[y - count + 7]) {
         return false;
       }
 
@@ -185,23 +234,23 @@ export default class QRSVG {
       name: "dot-color"
     });
 
-    for (let i = 0; i < count; i++) {
-      for (let j = 0; j < count; j++) {
-        if (filter && !filter(i, j)) {
+    for (let x = 0; x < count; x++) {
+      for (let y = 0; y < count; y++) {
+        if (filter && !filter(x, y)) {
           continue;
         }
-        if (!this._qr?.isDark(i, j)) {
+        if (!this._qr?.isDark(x, y)) {
           continue;
         }
 
         dot.draw(
-          xBeginning + i * dotSize,
-          yBeginning + j * dotSize,
+          xBeginning + x * dotSize,
+          yBeginning + y * dotSize,
           dotSize,
           (xOffset: number, yOffset: number): boolean => {
-            if (i + xOffset < 0 || j + yOffset < 0 || i + xOffset >= count || j + yOffset >= count) return false;
-            if (filter && !filter(i + xOffset, j + yOffset)) return false;
-            return !!this._qr && this._qr.isDark(i + xOffset, j + yOffset);
+            if (x + xOffset < 0 || y + yOffset < 0 || x + xOffset >= count || y + yOffset >= count) return false;
+            if (filter && !filter(x + xOffset, y + yOffset)) return false;
+            return !!this._qr && this._qr.isDark(x + xOffset, y + yOffset);
           }
         );
 
@@ -374,22 +423,97 @@ export default class QRSVG {
     count: number;
     dotSize: number;
   }): void {
-    const options = this._options;
-    const xBeginning = Math.floor((options.width - count * dotSize) / 2);
-    const yBeginning = Math.floor((options.height - count * dotSize) / 2);
-    const dx = xBeginning + options.imageOptions.margin + (count * dotSize - width) / 2;
-    const dy = yBeginning + options.imageOptions.margin + (count * dotSize - height) / 2;
-    const dw = width - options.imageOptions.margin * 2;
-    const dh = height - options.imageOptions.margin * 2;
+    if (!this._image) return;
+    console.log("width " + width, "height " + height, "count " + count, "dotSize " + dotSize);
 
+    const options = this._options;
+    const imageOptions = this._options.imageOptions;
+
+    console.log("--- options ---");
+    console.log("options.width " + options.width);
+    console.log("options.height " + options.height);
+
+    // Calculate the dimensions for the SVG element, accounting for margin and border width
+    const borderWidth = imageOptions.borderWidth || 0; // Use 0 if borderWidth is not provided
+    const totalMargin = 2 * imageOptions.margin;
+    let imageWidth = width;
+    let imageHeight = height;
+
+    // Calculate the dimensions of the square (based on the greater of imageWidth or imageHeight)
+    const squareSize = Math.max(imageWidth, imageHeight);
+
+    const aspectRatio = this._image.width / this._image.height;
+    let xImageOffset = 0;
+    let yImageOffset = 0;
+    if (aspectRatio > 1) {
+      imageHeight = squareSize;
+      const _imageWidth = imageHeight * aspectRatio;
+      xImageOffset = -(_imageWidth - imageWidth) / 2;
+      imageWidth = _imageWidth;
+    } else {
+      imageWidth = squareSize;
+      const _imageHeight = imageWidth / aspectRatio;
+      yImageOffset = -(_imageHeight - imageHeight) / 2;
+      imageHeight = _imageHeight;
+    }
+
+    console.log("squareSize " + squareSize, "final width", imageWidth, "final height", imageHeight);
+    // Calculate the position of the SVG element
+    const svgRootXPosition = Math.floor(Math.abs(options.width - squareSize) / 2);
+    const svgRootYPosition = Math.floor(Math.abs(options.height - squareSize) / 2);
+
+    // Calculate the center and radius of the circle based on the square size
+    const circleX = squareSize / 2;
+    const circleY = squareSize / 2;
+    const circleRadius = squareSize / 2 - borderWidth / 2;
+
+    // Create an SVG element for the square
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", `${squareSize}px`); // Set the SVG width to the square size
+    svg.setAttribute("height", `${squareSize}px`); // Set the SVG height to the square size
+    svg.setAttribute("x", String(svgRootXPosition)); // Set X position
+    svg.setAttribute("y", String(svgRootYPosition)); // Set Y position
+
+    // Define a circular clip path
+    const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+    clipPath.setAttribute("id", "circle-clip");
+
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", String(circleX));
+    circle.setAttribute("cy", String(circleY));
+    circle.setAttribute("r", String(circleRadius - totalMargin / 2)); // Adjust for margin
+
+    clipPath.appendChild(circle);
+
+    // Create an image element
     const image = document.createElementNS("http://www.w3.org/2000/svg", "image");
     image.setAttribute("href", options.image || "");
-    image.setAttribute("x", String(dx));
-    image.setAttribute("y", String(dy));
-    image.setAttribute("width", `${dw}px`);
-    image.setAttribute("height", `${dh}px`);
+    image.setAttribute("width", `${imageWidth}px`); // Set the image width to the square size
+    image.setAttribute("height", `${imageHeight}px`); // Set the image height to the square size
+    image.setAttribute("x", String(xImageOffset));
+    image.setAttribute("y", String(yImageOffset));
+    image.setAttribute("clip-path", "url(#circle-clip)");
 
-    this._element.appendChild(image);
+    // Append the elements to the SVG in the correct order
+    svg.appendChild(clipPath);
+    svg.appendChild(image);
+
+    if (borderWidth > 0) {
+      // Create a circular border
+      const borderCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      borderCircle.setAttribute("cx", String(circleX));
+      borderCircle.setAttribute("cy", String(circleY));
+      borderCircle.setAttribute("width", `${squareSize}px`); // Set the SVG width to the square size
+      borderCircle.setAttribute("height", `${squareSize}px`); // Set the SVG height to the square size
+      borderCircle.setAttribute("r", String(circleRadius)); // Adjust for the full circle
+      borderCircle.setAttribute("stroke", imageOptions.borderColor || "black"); // Border color
+      borderCircle.setAttribute("stroke-width", String(borderWidth)); // Border width
+      borderCircle.setAttribute("fill", "none"); // Transparent fill
+      svg.appendChild(borderCircle); // Add the circular border after the image
+    }
+
+    // Append the SVG to the container
+    this._element.appendChild(svg);
   }
 
   _createColor({
