@@ -53,10 +53,12 @@
     const qrCode = new QRCodeStyling(options);
     const qrCode2 = new QRCodeStyling({
       ...options,
+      data: options.data + Math.random(),
       type: 'svg',
     });
     const qrCode3 = new QRCodeStyling({
       ...options,
+      data: options.data + Math.random(),
       dotsOptions: {
         type: "extra-rounded",
         color: "black"
@@ -69,6 +71,7 @@
     });
     const qrCode4 = new QRCodeStyling({
       ...options,
+      data: options.data + Math.random(),
       image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Fibonacci_Squares.svg/1200px-Fibonacci_Squares.svg.png",
       dotsOptions: {
         color: "black"
@@ -86,6 +89,7 @@
     });
     const qrCode5 = new QRCodeStyling({
       ...options,
+      data: options.data + Math.random(),
       image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Fibonacci_Squares.svg/1200px-Fibonacci_Squares.svg.png",
       dotsOptions: {
         color: "black"

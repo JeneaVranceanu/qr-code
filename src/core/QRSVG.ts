@@ -6,6 +6,7 @@ import QRCornerDot from "../figures/cornerDot/svg/QRCornerDot";
 import { RequiredOptions } from "./QROptions";
 import gradientTypes from "../constants/gradientTypes";
 import { QRCode, FilterFunction, Gradient } from "../types";
+import { v4 as uuidv4 } from "uuid";
 
 const squareMask = [
   [1, 1, 1, 1, 1, 1, 1],
@@ -40,9 +41,11 @@ export default class QRSVG {
   //TODO don't pass all options to this class
   constructor(options: RequiredOptions) {
     this._element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this._element.setAttribute("id", uuidv4());
     this._element.setAttribute("width", String(options.width));
     this._element.setAttribute("height", String(options.height));
     this._defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    this._defs.setAttribute("id", uuidv4());
     this._element.appendChild(this._defs);
 
     this._options = options;
@@ -65,6 +68,7 @@ export default class QRSVG {
     this._element = oldElement.cloneNode(false) as SVGElement;
     oldElement?.parentNode?.replaceChild(this._element, oldElement);
     this._defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    this._defs.setAttribute("id", uuidv4());
     this._element.appendChild(this._defs);
   }
 
@@ -108,9 +112,6 @@ export default class QRSVG {
       let imageWidth = this._image.width;
       let imageHeight = this._image.height;
 
-      console.log("Original image w", imageWidth);
-      console.log("Original image w", imageHeight);
-
       const maxSize = Math.max(this._image.width, this._image.height);
       if (isCircleShape) {
         imageWidth = maxSize;
@@ -131,9 +132,7 @@ export default class QRSVG {
       });
 
       if (isCircleShape) {
-        console.log("drawImageSize.height", drawImageSize.height, dotSize, count);
         circleRadiusSquared = Math.pow(drawImageSize.height / dotSize / 2, 2);
-        console.log("circleRadiusSquared", circleRadiusSquared);
       }
 
       qrCodeFreeRectangle = {
@@ -195,7 +194,7 @@ export default class QRSVG {
           y: 0,
           height: options.height,
           width: options.width,
-          name: "background-color"
+          id: "background-color"
         });
       }
     }
@@ -220,7 +219,8 @@ export default class QRSVG {
     const dot = new QRDot({ svg: this._element, type: options.dotsOptions.type });
 
     this._dotsClipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
-    this._dotsClipPath.setAttribute("id", "clip-path-dot-color");
+    const id = uuidv4();
+    this._dotsClipPath.setAttribute("id", id);
     this._defs.appendChild(this._dotsClipPath);
 
     this._createColor({
@@ -231,7 +231,7 @@ export default class QRSVG {
       y: yBeginning,
       height: count * dotSize,
       width: count * dotSize,
-      name: "dot-color"
+      id: id
     });
 
     for (let x = 0; x < count; x++) {
@@ -293,7 +293,8 @@ export default class QRSVG {
 
       if (options.cornersSquareOptions?.gradient || options.cornersSquareOptions?.color) {
         cornersSquareClipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
-        cornersSquareClipPath.setAttribute("id", `clip-path-corners-square-color-${column}-${row}`);
+        const id = uuidv4();
+        cornersSquareClipPath.setAttribute("id", id);
         this._defs.appendChild(cornersSquareClipPath);
         this._cornersSquareClipPath = this._cornersDotClipPath = cornersDotClipPath = cornersSquareClipPath;
 
@@ -305,7 +306,7 @@ export default class QRSVG {
           y,
           height: cornersSquareSize,
           width: cornersSquareSize,
-          name: `corners-square-color-${column}-${row}`
+          id: id
         });
       }
 
@@ -342,7 +343,8 @@ export default class QRSVG {
 
       if (options.cornersDotOptions?.gradient || options.cornersDotOptions?.color) {
         cornersDotClipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
-        cornersDotClipPath.setAttribute("id", `clip-path-corners-dot-color-${column}-${row}`);
+        const id = uuidv4();
+        cornersDotClipPath.setAttribute("id", id);
         this._defs.appendChild(cornersDotClipPath);
         this._cornersDotClipPath = cornersDotClipPath;
 
@@ -354,7 +356,7 @@ export default class QRSVG {
           y: y + dotSize * 2,
           height: cornersDotSize,
           width: cornersDotSize,
-          name: `corners-dot-color-${column}-${row}`
+          id: id
         });
       }
 
@@ -424,14 +426,9 @@ export default class QRSVG {
     dotSize: number;
   }): void {
     if (!this._image) return;
-    console.log("width " + width, "height " + height, "count " + count, "dotSize " + dotSize);
-
+    console.debug(count, dotSize);
     const options = this._options;
     const imageOptions = this._options.imageOptions;
-
-    console.log("--- options ---");
-    console.log("options.width " + options.width);
-    console.log("options.height " + options.height);
 
     // Calculate the dimensions for the SVG element, accounting for margin and border width
     const borderWidth = imageOptions.borderWidth || 0; // Use 0 if borderWidth is not provided
@@ -441,75 +438,90 @@ export default class QRSVG {
 
     // Calculate the dimensions of the square (based on the greater of imageWidth or imageHeight)
     const squareSize = Math.max(imageWidth, imageHeight);
-
-    const aspectRatio = this._image.width / this._image.height;
     let xImageOffset = 0;
     let yImageOffset = 0;
-    if (aspectRatio > 1) {
-      imageHeight = squareSize;
-      const _imageWidth = imageHeight * aspectRatio;
-      xImageOffset = -(_imageWidth - imageWidth) / 2;
-      imageWidth = _imageWidth;
-    } else {
-      imageWidth = squareSize;
-      const _imageHeight = imageWidth / aspectRatio;
-      yImageOffset = -(_imageHeight - imageHeight) / 2;
-      imageHeight = _imageHeight;
+
+    const isCircleShape = imageOptions.shape === "circle";
+
+    if (isCircleShape) {
+      const aspectRatio = this._image.width / this._image.height;
+      if (aspectRatio > 1) {
+        imageHeight = squareSize;
+        const _imageWidth = imageHeight * aspectRatio;
+        xImageOffset = -(_imageWidth - imageWidth) / 2;
+        imageWidth = _imageWidth;
+      } else {
+        imageWidth = squareSize;
+        const _imageHeight = imageWidth / aspectRatio;
+        yImageOffset = -(_imageHeight - imageHeight) / 2;
+        imageHeight = _imageHeight;
+      }
     }
 
-    console.log("squareSize " + squareSize, "final width", imageWidth, "final height", imageHeight);
     // Calculate the position of the SVG element
-    const svgRootXPosition = Math.floor(Math.abs(options.width - squareSize) / 2);
-    const svgRootYPosition = Math.floor(Math.abs(options.height - squareSize) / 2);
+    const svgRootXPosition = Math.floor(Math.abs(options.width - imageWidth) / 2);
+    const svgRootYPosition = Math.floor(Math.abs(options.height - imageHeight) / 2);
 
-    // Calculate the center and radius of the circle based on the square size
-    const circleX = squareSize / 2;
-    const circleY = squareSize / 2;
+    // Calculate the center and radius of the image/circle based on the size
+    const circleX = imageWidth / 2;
+    const circleY = imageHeight / 2;
     const circleRadius = squareSize / 2 - borderWidth / 2;
 
     // Create an SVG element for the square
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", `${squareSize}px`); // Set the SVG width to the square size
-    svg.setAttribute("height", `${squareSize}px`); // Set the SVG height to the square size
+    svg.setAttribute("id", uuidv4());
+    svg.setAttribute("width", `${imageWidth}px`); // Set the SVG width to the square size
+    svg.setAttribute("height", `${imageHeight}px`); // Set the SVG height to the square size
     svg.setAttribute("x", String(svgRootXPosition)); // Set X position
     svg.setAttribute("y", String(svgRootYPosition)); // Set Y position
 
-    // Define a circular clip path
-    const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
-    clipPath.setAttribute("id", "circle-clip");
-
-    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    circle.setAttribute("cx", String(circleX));
-    circle.setAttribute("cy", String(circleY));
-    circle.setAttribute("r", String(circleRadius - totalMargin / 2)); // Adjust for margin
-
-    clipPath.appendChild(circle);
-
     // Create an image element
     const image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+    image.setAttribute("id", uuidv4());
     image.setAttribute("href", options.image || "");
     image.setAttribute("width", `${imageWidth}px`); // Set the image width to the square size
     image.setAttribute("height", `${imageHeight}px`); // Set the image height to the square size
     image.setAttribute("x", String(xImageOffset));
     image.setAttribute("y", String(yImageOffset));
-    image.setAttribute("clip-path", "url(#circle-clip)");
 
-    // Append the elements to the SVG in the correct order
-    svg.appendChild(clipPath);
+    if (isCircleShape) {
+      // Define a circular clip path
+      const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+      const circleClipId = uuidv4();
+      clipPath.setAttribute("id", circleClipId);
+
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("id", uuidv4());
+      circle.setAttribute("cx", String(circleX));
+      circle.setAttribute("cy", String(circleY));
+      circle.setAttribute("r", String(circleRadius - totalMargin / 2)); // Adjust for margin
+
+      clipPath.appendChild(circle);
+      image.setAttribute("clip-path", `url(#${circleClipId})`);
+
+      // Append the elements to the SVG in the correct order
+      svg.appendChild(clipPath);
+    }
+
     svg.appendChild(image);
 
     if (borderWidth > 0) {
-      // Create a circular border
-      const borderCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      borderCircle.setAttribute("cx", String(circleX));
-      borderCircle.setAttribute("cy", String(circleY));
-      borderCircle.setAttribute("width", `${squareSize}px`); // Set the SVG width to the square size
-      borderCircle.setAttribute("height", `${squareSize}px`); // Set the SVG height to the square size
-      borderCircle.setAttribute("r", String(circleRadius)); // Adjust for the full circle
-      borderCircle.setAttribute("stroke", imageOptions.borderColor || "black"); // Border color
-      borderCircle.setAttribute("stroke-width", String(borderWidth)); // Border width
-      borderCircle.setAttribute("fill", "none"); // Transparent fill
-      svg.appendChild(borderCircle); // Add the circular border after the image
+      let borderElement: SVGElement;
+      if (isCircleShape) {
+        borderElement = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        borderElement.setAttribute("cx", String(circleX));
+        borderElement.setAttribute("cy", String(circleY));
+        borderElement.setAttribute("r", String(circleRadius));
+      } else {
+        borderElement = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      }
+      borderElement.setAttribute("id", uuidv4());
+      borderElement.setAttribute("width", `${imageWidth}px`); // Set the SVG width to the square size
+      borderElement.setAttribute("height", `${imageHeight}px`); // Set the SVG height to the square size
+      borderElement.setAttribute("stroke", imageOptions.borderColor || "black"); // Border color
+      borderElement.setAttribute("stroke-width", String(borderWidth)); // Border width
+      borderElement.setAttribute("fill", "none"); // Transparent fill
+      svg.appendChild(borderElement); // Add the circular border after the image
     }
 
     // Append the SVG to the container
@@ -524,7 +536,7 @@ export default class QRSVG {
     y,
     height,
     width,
-    name
+    id
   }: {
     options?: Gradient;
     color?: string;
@@ -533,7 +545,7 @@ export default class QRSVG {
     y: number;
     height: number;
     width: number;
-    name: string;
+    id: string;
   }): void {
     const size = width > height ? width : height;
     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -541,13 +553,14 @@ export default class QRSVG {
     rect.setAttribute("y", String(y));
     rect.setAttribute("height", String(height));
     rect.setAttribute("width", String(width));
-    rect.setAttribute("clip-path", `url('#clip-path-${name}')`);
+    rect.setAttribute("clip-path", `url('#${id}')`);
 
     if (options) {
       let gradient: SVGElement;
+      const gradientId = uuidv4();
       if (options.type === gradientTypes.radial) {
         gradient = document.createElementNS("http://www.w3.org/2000/svg", "radialGradient");
-        gradient.setAttribute("id", name);
+        gradient.setAttribute("id", gradientId);
         gradient.setAttribute("gradientUnits", "userSpaceOnUse");
         gradient.setAttribute("fx", String(x + width / 2));
         gradient.setAttribute("fy", String(y + height / 2));
@@ -588,7 +601,7 @@ export default class QRSVG {
         }
 
         gradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-        gradient.setAttribute("id", name);
+        gradient.setAttribute("id", gradientId);
         gradient.setAttribute("gradientUnits", "userSpaceOnUse");
         gradient.setAttribute("x1", String(Math.round(x0)));
         gradient.setAttribute("y1", String(Math.round(y0)));
@@ -603,7 +616,7 @@ export default class QRSVG {
         gradient.appendChild(stop);
       });
 
-      rect.setAttribute("fill", `url('#${name}')`);
+      rect.setAttribute("fill", `url('#${gradientId}')`);
       this._defs.appendChild(gradient);
     } else if (color) {
       rect.setAttribute("fill", color);

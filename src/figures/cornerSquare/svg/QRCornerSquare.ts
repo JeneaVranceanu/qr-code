@@ -1,5 +1,6 @@
 import cornerSquareTypes from "../../../constants/cornerSquareTypes";
 import { CornerSquareType, DrawArgs, BasicFigureDrawArgs, RotateFigureArgs } from "../../../types";
+import { v4 as uuidv4 } from "uuid";
 
 export default class QRCornerSquare {
   _element?: SVGElement;
@@ -46,6 +47,7 @@ export default class QRCornerSquare {
       ...args,
       draw: () => {
         this._element = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        this._element.setAttribute("id", uuidv4());
         this._element.setAttribute("clip-rule", "evenodd");
         this._element.setAttribute(
           "d",
@@ -68,6 +70,7 @@ export default class QRCornerSquare {
       ...args,
       draw: () => {
         this._element = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        this._element.setAttribute("id", uuidv4());
         this._element.setAttribute("clip-rule", "evenodd");
         this._element.setAttribute(
           "d",
@@ -94,6 +97,7 @@ export default class QRCornerSquare {
       ...args,
       draw: () => {
         this._element = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        this._element.setAttribute("id", uuidv4());
         this._element.setAttribute("clip-rule", "evenodd");
         this._element.setAttribute(
           "d",
