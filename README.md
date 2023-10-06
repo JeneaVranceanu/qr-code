@@ -1,5 +1,5 @@
 # QR Code Styling
-[![Version](https://img.shields.io/npm/v/qr-code-styling.svg)](https://www.npmjs.org/package/qr-code-styling)
+<!-- [![Version](https://img.shields.io/npm/v/qr-code-styling.svg)](https://www.npmjs.org/package/qr-code-styling) -->
 
 JavaScript library for generating QR codes with a logo and styling.
 
@@ -27,7 +27,7 @@ npm install qr-code-styling
 <head>
     <meta charset="UTF-8">
     <title>QR Code Styling</title>
-    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling"></script>
 </head>
 <body>
 <div id="canvas"></div>
