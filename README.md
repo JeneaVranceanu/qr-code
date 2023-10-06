@@ -11,11 +11,11 @@ If you have issues / suggestions / notes / questions, please open an issue or co
 ### Examples
 
 <p float="left">
-<img style="display:inline-block" src="https://raw.githubusercontent.com/kozakdenys/qr-code-styling/master/src/assets/facebook_example_new.png" width="240" />
-<img style="display:inline-block" src="https://raw.githubusercontent.com/kozakdenys/qr-code-styling/master/src/assets/qr_code_example.png" width="240" />
-<img style="display:inline-block" src="https://raw.githubusercontent.com/kozakdenys/qr-code-styling/master/src/assets/telegram_example_new.png" width="240" />
-<img style="display:inline-block" src="https://raw.githubusercontent.com/kozakdenys/qr-code-styling/master/src/assets/facebook_example_new_2.png" width="240" />
-<img style="display:inline-block" src="https://raw.githubusercontent.com/kozakdenys/qr-code-styling/master/src/assets/empty_circle_example.png" width="480" />
+<img style="display:inline-block" src="https://raw.githubusercontent.com/JeneaVranceanu/qr-code-styling/master/src/assets/facebook_example_new.png" width="240" />
+<img style="display:inline-block" src="https://raw.githubusercontent.com/JeneaVranceanu/qr-code-styling/master/src/assets/qr_code_example.png" width="240" />
+<img style="display:inline-block" src="https://raw.githubusercontent.com/JeneaVranceanu/qr-code-styling/master/src/assets/telegram_example_new.png" width="240" />
+<img style="display:inline-block" src="https://raw.githubusercontent.com/JeneaVranceanu/qr-code-styling/master/src/assets/facebook_example_new_2.png" width="240" />
+<img style="display:inline-block" src="https://raw.githubusercontent.com/JeneaVranceanu/qr-code-styling/master/src/assets/empty_circle_example.png" width="480" />
 </p>
 
 ### Installation
@@ -72,11 +72,11 @@ npm install qr-code-styling
 
 ---
 
-[**React example (source)**](https://github.com/kozakdenys/qr-code-styling-examples/tree/master/examples/react)
+[**React example (source)**](https://github.com/JeneaVranceanu/qr-code-styling-examples/tree/master/examples/react)
 
-[**Angular example (source)**](https://github.com/kozakdenys/qr-code-styling-examples/tree/master/examples/angular)
+[**Angular example (source)**](https://github.com/JeneaVranceanu/qr-code-styling-examples/tree/master/examples/angular)
 
-[**Vue example (source)**](https://github.com/kozakdenys/qr-code-styling-examples/tree/master/examples/vue)
+[**Vue example (source)**](https://github.com/JeneaVranceanu/qr-code-styling-examples/tree/master/examples/vue)
 
 ---
 
@@ -253,4 +253,4 @@ const extension = (svg, options) => {
 
 ### License
 
-[MIT License](https://raw.githubusercontent.com/kozakdenys/qr-code-styling/master/LICENSE). Copyright (c) 2021 Denys Kozak
+[MIT License](https://raw.githubusercontent.com/JeneaVranceanu/qr-code-styling/master/LICENSE). Copyright (c) 2023 Denys Kozak, Jenea Vranceanu
