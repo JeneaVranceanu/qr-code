@@ -397,13 +397,33 @@ export default class QRCanvas {
     }
 
     const options = this._options;
+    const imageOptions = this._options.imageOptions;
     const xBeginning = Math.floor((options.width - count * dotSize) / 2);
     const yBeginning = Math.floor((options.height - count * dotSize) / 2);
-    const dx = xBeginning + options.imageOptions.margin + (count * dotSize - width) / 2;
-    const dy = yBeginning + options.imageOptions.margin + (count * dotSize - height) / 2;
-    const dw = width - options.imageOptions.margin * 2;
-    const dh = height - options.imageOptions.margin * 2;
+    const dx = xBeginning + imageOptions.margin + (count * dotSize - width) / 2;
+    const dy = yBeginning + imageOptions.margin + (count * dotSize - height) / 2;
+    const dw = width - imageOptions.margin * 2;
+    const dh = height - imageOptions.margin * 2;
 
+    // if (imageOptions.radius) {
+    //   const borderWidth = Math.max(imageOptions.borderWidth ?? 0, 0);
+    //   const borderColor = imageOptions.borderColor ?? "#ffffff";
+    //   const centerX = options.width / 2;
+    //   const centerY = options.width / 2;
+    //   const radius = imageOptions.radius + borderWidth;
+
+    //   // Draw the border around the circle
+    //   canvasContext.beginPath();
+    //   canvasContext.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    //   if (borderWidth > 0) {
+    //     canvasContext.lineWidth = borderWidth; // Set the border width
+    //     canvasContext.strokeStyle = borderColor; // Set the border color
+    //   }
+    //   canvasContext.stroke();
+
+    //   // Clip the canvas to the circular path
+    //   canvasContext.clip();
+    // }
     canvasContext.drawImage(this._image, dx, dy, dw < 0 ? 0 : dw, dh < 0 ? 0 : dh);
   }
 
