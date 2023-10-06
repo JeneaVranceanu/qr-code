@@ -21,7 +21,7 @@ If you have issues / suggestions / notes / questions, please open an issue or co
 ### Installation
 
 ```
-npm install qr-code-styling
+yarn add github:JeneaVranceanu/qr-code-styling
 ```
 
 ### Usage
