@@ -1,0 +1,68 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14" # Use a specific Node version, adjust if needed
+
+      - name: Install dependencies
+        run: yarn install # Assuming you're using Yarn
+
+      - name: Build the library
+        run: yarn build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: qr-code-styling.js
+          path: dist/qr-code-styling.js # Assuming this is the path to your built JS file
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: qr-code-styling.js
+          path: dist
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: New release of qr-code-styling.
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/qr-code-styling.js
+          asset_name: qr-code-styling.js
+          asset_content_type: application/javascript
