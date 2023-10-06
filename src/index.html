@@ -1,49 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>QR Code Styling</title>
-    </head>
-    <body>
-        <div id="canvas"></div>
-        <script type="text/javascript">
-            const options = {
-              shape: "circle",
-              type: 'svg',
-              width: 500,
-              height: 500,
-              data: "h",
-              image: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
-              dotsOptions: {
-                type: "extra-rounded",
-                gradient: {
-                  type: "linear", //radial,
-                  rotation: Math.PI/2,
-                  colorStops: [{ offset: 0, color: 'blue' }, { offset: 0.5, color: 'red' }, { offset: 1, color: 'green' }]
-                },
-              },
-              cornersSquareOptions: {
-                type: "rounded",
-                gradient: {
-                  type: "linear",
-                  rotation: Math.PI * 0.2,
-                  colorStops: [{
-                    offset: 0,
-                    color: 'blue'
-                  }, {
-                    offset: 1,
-                    color: 'red'
-                  }]
-                },
-              },
-              imageOptions: {
-                crossOrigin: "anonymous",
-                margin: 30
-              }
-            };
-            const qrCode = new QRCodeStyling(options);
 
-            qrCode.append(document.getElementById("canvas"));
-        </script>
-    </body>
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Styling</title>
+</head>
+
+<body>
+  <div id="canvas"></div>
+  <div id="canvas2"></div>
+  <div id="canvas3"></div>
+  <div id="canvas4"></div>
+  <div id="canvas5"></div>
+  <script async type="text/javascript">
+    console.log("This script must load last")
+    const options = {
+      width: 500,
+      height: 500,
+      data: "eip155:0xcafecafecafecafecafecafecafecafecafecafe:2828",
+      type: 'canvas', // 'canvas' is default value but setting here for clarity
+      image: "https://2eff.lukso.dev/ipfs/QmS4Sb1bWC2xiDPfHvqV8urpzwjUQioqrzKRCXdmSNpDXA",
+      dotsOptions: {
+        type: "rounded",
+        gradient: {
+          type: "linear", //radial,
+          rotation: Math.PI / 4,
+          colorStops: [{ offset: 0, color: 'blue' }, { offset: 0.5, color: 'red' }, { offset: 1, color: 'green' }]
+        },
+      },
+      cornersSquareOptions: {
+        type: "rounded",
+        gradient: {
+          type: "linear",
+          rotation: Math.PI * 0.2,
+          colorStops: [{
+            offset: 0,
+            color: 'blue'
+          }, {
+            offset: 1,
+            color: 'red'
+          }]
+        },
+      },
+      imageOptions: {
+        imageSize: 0.18,
+        crossOrigin: "anonymous",
+        shape: 'circle',
+        borderWidth: 7,
+        borderColor: '#ffffff'
+      }
+    };
+    const qrCode = new QRCodeStyling(options);
+    const qrCode2 = new QRCodeStyling({
+      ...options,
+      shapeRendering: "geometricPrecision",
+      data: options.data + Math.random() + Math.random() + Math.random() + Math.random() + Math.random(),
+      type: 'svg',
+    });
+    const qrCode3 = new QRCodeStyling({
+      ...options,
+      shapeRendering: "geometricPrecision",
+      data: options.data + Math.random(),
+      dotsOptions: {
+        type: "extra-rounded",
+        color: "black"
+      },
+      cornersSquareOptions: {
+        type: "extra-rounded",
+        color: "black"
+      },
+      type: 'svg',
+    });
+    const qrCode4 = new QRCodeStyling({
+      ...options,
+      data: options.data + Math.random(),
+      // Use "crispEdges" to resolve issue with white lines appearing between squares/dots of a QR code
+      shapeRendering: "crispEdges",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Fibonacci_Squares.svg/1200px-Fibonacci_Squares.svg.png",
+      dotsOptions: {
+        color: "black"
+      },
+      imageOptions: {
+        imageSize: 0.40,
+        crossOrigin: "anonymous",
+        borderWidth: 10,
+        borderColor: "red"
+      },
+      cornersSquareOptions: {
+        color: "black"
+      },
+      type: 'svg',
+    });
+    const qrCode5 = new QRCodeStyling({
+      ...options,
+      data: options.data + Math.random(),
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Fibonacci_Squares.svg/1200px-Fibonacci_Squares.svg.png",
+      dotsOptions: {
+        color: "black"
+      },
+      imageOptions: {
+        imageSize: 0.80,
+        crossOrigin: "anonymous",
+        borderWidth: 40,
+        borderColor: "blue"
+      },
+      cornersSquareOptions: {
+        color: "black"
+      },
+      type: 'svg',
+    });
+
+    qrCode.append(document.getElementById("canvas"));
+    qrCode2.append(document.getElementById("canvas2"));
+    qrCode3.append(document.getElementById("canvas3"));
+    qrCode4.append(document.getElementById("canvas4"));
+    qrCode5.append(document.getElementById("canvas5"));
+
+    // qrCode2.download()
+  </script>
+</body>
+
 </html>

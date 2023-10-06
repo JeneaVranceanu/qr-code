@@ -1,17 +1,37 @@
-const { merge } = require('webpack-merge');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const commonConfig = require('./webpack.config.common.js');
+const { merge } = require("webpack-merge");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const commonConfig = require("./webpack.config.common.js");
+const path = require("path");
+
+const rootPath = path.resolve(__dirname, "./");
+const srcPath = path.resolve(rootPath, "src");
+const libPath = path.resolve(rootPath, "lib");
 
 module.exports = merge(commonConfig, {
-  mode: 'development',
-  devServer: {
-    injectClient: false //workaround for bug https://github.com/webpack/webpack-dev-server/issues/2484
-  },
+  mode: "development",
   devtool: "inline-source-map",
+  devServer: {
+    watchFiles: [srcPath + "/**/*.html", srcPath + "/**/*.ts", srcPath + "/**/*.js"]
+  },
+  watchOptions: {
+    aggregateTimeout: 500,
+    poll: 1000
+  },
   plugins: [
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: [
+        libPath + "/**/*.ts",
+        libPath + "/**/*.js",
+        libPath + "/**/*.html",
+        libPath + "/**/*.css"
+      ]
+    }),
     new HtmlWebpackPlugin({
-      template: './src/index.html',
-      inject: 'head'
+      title: "Development",
+      template: srcPath + "/index.html",
+      inject: "head",
+      scriptLoading: "blocking"
     })
   ]
 });
