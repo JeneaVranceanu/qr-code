@@ -44,6 +44,9 @@ export default class QRSVG {
     this._element.setAttribute("id", uuidv4());
     this._element.setAttribute("width", String(options.width));
     this._element.setAttribute("height", String(options.height));
+    if (options.shapeRendering) {
+      this._element.setAttribute("shape-rendering", options.shapeRendering);
+    }
     this._defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     this._defs.setAttribute("id", uuidv4());
     this._element.appendChild(this._defs);
@@ -601,14 +604,13 @@ export default class QRSVG {
         }
 
         gradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-        gradient.setAttribute("id", gradientId);
         gradient.setAttribute("gradientUnits", "userSpaceOnUse");
         gradient.setAttribute("x1", String(Math.round(x0)));
         gradient.setAttribute("y1", String(Math.round(y0)));
         gradient.setAttribute("x2", String(Math.round(x1)));
         gradient.setAttribute("y2", String(Math.round(y1)));
       }
-
+      gradient.setAttribute("id", gradientId);
       options.colorStops.forEach(({ offset, color }: { offset: number; color: string }) => {
         const stop = document.createElementNS("http://www.w3.org/2000/svg", "stop");
         stop.setAttribute("offset", `${100 * offset}%`);

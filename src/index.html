@@ -53,11 +53,13 @@
     const qrCode = new QRCodeStyling(options);
     const qrCode2 = new QRCodeStyling({
       ...options,
-      data: options.data + Math.random(),
+      shapeRendering: "geometricPrecision",
+      data: options.data + Math.random() + Math.random() + Math.random() + Math.random() + Math.random(),
       type: 'svg',
     });
     const qrCode3 = new QRCodeStyling({
       ...options,
+      shapeRendering: "geometricPrecision",
       data: options.data + Math.random(),
       dotsOptions: {
         type: "extra-rounded",
@@ -72,6 +74,8 @@
     const qrCode4 = new QRCodeStyling({
       ...options,
       data: options.data + Math.random(),
+      // Use "crispEdges" to resolve issue with white lines appearing between squares/dots of a QR code
+      shapeRendering: "crispEdges",
       image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Fibonacci_Squares.svg/1200px-Fibonacci_Squares.svg.png",
       dotsOptions: {
         color: "black"
