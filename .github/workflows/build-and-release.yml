@@ -16,10 +16,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" # Use a specific Node version, adjust if needed
+          node-version: "18.18.0"
 
       - name: Install dependencies
-        run: yarn install # Assuming you're using Yarn
+        run: yarn install
 
       - name: Build the library
         run: yarn build
@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: qr-code-styling.js
-          path: dist/qr-code-styling.js # Assuming this is the path to your built JS file
+          path: dist/qr-code-styling.js
 
   release:
     needs: build
