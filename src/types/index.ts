@@ -108,6 +108,7 @@ export type Options = {
   shape?: ShapeType;
   width?: number;
   height?: number;
+  image?: string;
   margin?: number;
   data?: string;
   /**
@@ -123,7 +124,7 @@ export type Options = {
     hideBackgroundDots?: boolean;
     imageSize?: number;
     crossOrigin?: string;
-    margin: number;
+    margin?: number;
     shape?: string;
     borderWidth?: number;
     borderColor?: string;
