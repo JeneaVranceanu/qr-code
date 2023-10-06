@@ -1,5 +1,5 @@
-import dotTypes from "../../../constants/dotTypes";
-import { DotType, GetNeighbor, DrawArgs, BasicFigureDrawArgs, RotateFigureArgs } from "../../../types";
+import dotTypes from "../../constants/dotTypes";
+import { DotType, GetNeighbor, DrawArgs, BasicFigureDrawArgs, RotateFigureArgs } from "../../types";
 import { v4 as uuidv4 } from "uuid";
 
 export default class QRDot {

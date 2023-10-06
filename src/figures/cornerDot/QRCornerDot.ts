@@ -1,6 +1,7 @@
-import cornerDotTypes from "../../../constants/cornerDotTypes";
-import { CornerDotType, RotateFigureArgs, BasicFigureDrawArgs, DrawArgs } from "../../../types";
+import cornerDotTypes from "../../constants/cornerDotTypes";
+import { CornerDotType, RotateFigureArgs, BasicFigureDrawArgs, DrawArgs } from "../../types";
 import { v4 as uuidv4 } from "uuid";
+
 export default class QRCornerDot {
   _element?: SVGElement;
   _svg: SVGElement;

@@ -1,5 +1,5 @@
-import cornerSquareTypes from "../../../constants/cornerSquareTypes";
-import { CornerSquareType, DrawArgs, BasicFigureDrawArgs, RotateFigureArgs } from "../../../types";
+import cornerSquareTypes from "../../constants/cornerSquareTypes";
+import { CornerSquareType, DrawArgs, BasicFigureDrawArgs, RotateFigureArgs } from "../../types";
 import { v4 as uuidv4 } from "uuid";
 
 export default class QRCornerSquare {
