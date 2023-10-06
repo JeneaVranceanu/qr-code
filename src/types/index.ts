@@ -110,7 +110,10 @@ export type Options = {
   height?: number;
   margin?: number;
   data?: string;
-  image?: string;
+  /**
+   * See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/shape-rendering#usage_notes
+   */
+  shapeRendering?: string;
   qrOptions?: {
     typeNumber?: TypeNumber;
     mode?: Mode;
@@ -120,7 +123,10 @@ export type Options = {
     hideBackgroundDots?: boolean;
     imageSize?: number;
     crossOrigin?: string;
-    margin?: number;
+    margin: number;
+    shape?: string;
+    borderWidth?: number;
+    borderColor?: string;
   };
   dotsOptions?: {
     type?: DotType;
