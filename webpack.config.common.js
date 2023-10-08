@@ -32,10 +32,10 @@ module.exports = {
   },
   plugins: [
     new ESLintPlugin({
-      extensions: [".js", ".ts"]
+      extensions: [".js", ".ts", ".tsx"]
     })
   ],
   resolve: {
-    extensions: [".ts", ".js"]
+    extensions: [".ts", ".js", ".tsx"]
   }
 };
