@@ -15,8 +15,7 @@ export const QRCodeView: React.FC<QRCodeViewProps> = ({ options }: QRCodeViewPro
         <script type="text/javascript" src="https://raw.githubusercontent.com/JeneaVranceanu/qr-code-styling/master/dist/qr-code-styling.js"></script>
       </head>
       <body>
-      <div id="canvas" style="background-color: #ab2323"></div>
-      <p> bull shit </p>
+      <div id="canvas"></div>
       <script type="text/javascript">
       ${new QRCodeStyling(options)}.append(document.getElementById("canvas"));
       </script>
