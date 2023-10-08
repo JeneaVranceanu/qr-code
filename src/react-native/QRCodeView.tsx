@@ -17,7 +17,7 @@ const QRCodeView: React.FC<QRCodeViewProps> = ({ options }: QRCodeViewProps) => 
       <body>
       <div id="canvas"></div>
       <script type="text/javascript">
-      ${new QRCodeStyling(options)}.append(document.getElementById("canvas"));
+      new QRCodeStyling(${options}).append(document.getElementById("canvas"));
       </script>
       </body>
       </html>`,
