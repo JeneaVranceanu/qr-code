@@ -8,8 +8,6 @@ interface QRCodeViewProps {
 }
 
 const QRCodeView: React.FC<QRCodeViewProps> = ({ options }: QRCodeViewProps) => {
-  console.log("QRCodeStyling is the following:");
-  console.log(QRCodeStyling);
   const html = useMemo(
     () =>
       `<html>
