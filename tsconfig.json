@@ -1,26 +1,26 @@
 {
-    "compilerOptions": {
-        "outDir": "./lib/",
-        "sourceMap": true,
-        "module": "ESNEXT",
-        "target": "ES2022",
-        "allowJs": true,
-        "moduleResolution": "node",
-        "declaration": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "noImplicitAny": true,
-        "noImplicitThis": true,
-        "alwaysStrict": true,
-        "strictNullChecks": true,
-        "forceConsistentCasingInFileNames": true,
-        "noImplicitReturns": true,
-        "noUnusedLocals": true,
-        "esModuleInterop": true
-    },
-    "include": ["./src/**/*", "index.ts", "index.test.js"],
-    "exclude": [
-        "**/*.test.js",
-        "**/*.test.ts"
-    ]
+  "compilerOptions": {
+    "jsx": "react-native",
+    "outDir": "./lib/",
+    "sourceMap": true,
+    "module": "ESNEXT",
+    "target": "ES2022",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true
+  },
+  "include": ["./src/**/*", "index.ts", "index.test.js"],
+  "exclude": ["**/*.test.js", "**/*.test.ts"]
 }
