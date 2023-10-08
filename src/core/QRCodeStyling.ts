@@ -21,7 +21,6 @@ export default class QRCodeStyling {
 
   constructor(options?: Partial<Options>) {
     this._options = options ? sanitizeOptions(mergeDeep(defaultOptions, options) as RequiredOptions) : defaultOptions;
-    this.update();
   }
 
   static _clearContainer(container?: HTMLElement): void {

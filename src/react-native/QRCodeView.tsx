@@ -8,16 +8,17 @@ interface QRCodeViewProps {
 }
 
 const QRCodeView: React.FC<QRCodeViewProps> = ({ options }: QRCodeViewProps) => {
+  console.log("QRCodeStyling is the following:");
+  console.log(QRCodeStyling);
   const html = useMemo(
     () =>
       `<html>
-      <head>
-        <script type="text/javascript">${QRCodeStyling}</script>
-      </head>
       <body>
       <div id="canvas"></div>
       <script type="text/javascript">
-      new QRCodeStyling(${options}).append(document.getElementById("canvas"));
+        var qrCode = ${new QRCodeStyling(options)};
+        qrCode.append(document.getElementById("canvas"));
+        qrCode.update();
       </script>
       </body>
       </html>`,

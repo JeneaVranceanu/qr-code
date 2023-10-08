@@ -32,6 +32,8 @@ describe("Test QRCodeStyling class", () => {
 
     qrCode.append(container);
 
+    qrCode.update();
+
     return qrCode._getElement().then((element) => {
       expect(element.toDataURL()).toEqual(expect.stringContaining(expectedQRCodeFile));
     });

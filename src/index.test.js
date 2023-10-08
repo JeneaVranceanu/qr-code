@@ -23,7 +23,6 @@ test("renders correctly", () => {
     width: 500,
     height: 500,
     data: "eip155:0xcafecafecafecafecafecafecafecafecafecafe:2828",
-    type: "canvas", // 'canvas' is default value but setting here for clarity
     image: "https://2eff.lukso.dev/ipfs/QmS4Sb1bWC2xiDPfHvqV8urpzwjUQioqrzKRCXdmSNpDXA",
     dotsOptions: {
       type: "rounded",

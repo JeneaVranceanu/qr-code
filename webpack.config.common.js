@@ -24,7 +24,7 @@ module.exports = {
         exclude: /node_modules/
       },
       {
-        test: /\.js$/,
+        test: /\.(js|ts)$/,
         exclude: /node_modules/,
         use: "raw-loader"
       }
