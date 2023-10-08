@@ -12,7 +12,7 @@ export const QRCodeView: React.FC<QRCodeViewProps> = ({ options }: QRCodeViewPro
     () =>
       `<html>
       <head>
-        <script type="text/javascript" src="https://raw.githubusercontent.com/JeneaVranceanu/qr-code-styling/master/dist/qr-code-styling.js"></script>
+        <script type="text/javascript">${QRCodeStyling}</script>
       </head>
       <body>
       <div id="canvas"></div>
