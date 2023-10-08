@@ -7,7 +7,7 @@ interface QRCodeViewProps {
   options: Partial<Options>;
 }
 
-export const QRCodeView: React.FC<QRCodeViewProps> = ({ options }: QRCodeViewProps) => {
+const QRCodeView: React.FC<QRCodeViewProps> = ({ options }: QRCodeViewProps) => {
   const html = useMemo(
     () =>
       `<html>
@@ -34,3 +34,5 @@ export const QRCodeView: React.FC<QRCodeViewProps> = ({ options }: QRCodeViewPro
     />
   );
 };
+
+export default QRCodeView;

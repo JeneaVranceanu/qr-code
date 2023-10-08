@@ -9,6 +9,7 @@ import qrTypes from "./constants/qrTypes";
 import drawTypes from "./constants/drawTypes";
 import shapeTypes from "./constants/shapeTypes";
 import gradientTypes from "./constants/gradientTypes";
+import QRCodeView from "./react-native/QRCodeView";
 
 export * from "./types";
 
@@ -22,7 +23,8 @@ export {
   qrTypes,
   drawTypes,
   shapeTypes,
-  gradientTypes
+  gradientTypes,
+  QRCodeView
 };
 
 export default QRCodeStyling;
