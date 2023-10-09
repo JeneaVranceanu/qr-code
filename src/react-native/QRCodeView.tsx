@@ -11,6 +11,7 @@ const QRCodeView: React.FC<QRCodeViewProps> = ({ options }: QRCodeViewProps) => 
   const html = useMemo(
     () =>
       `<html>
+      <head><script src="../../dist/qr-code-styling.js"></script></head>
       <body>
       <div id="canvas"></div>
       <script type="text/javascript">
