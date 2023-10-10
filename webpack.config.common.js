@@ -13,8 +13,7 @@ module.exports = {
     filename: "qr-code-styling.js",
     library: "QRCodeStyling",
     libraryTarget: "umd",
-    libraryExport: "default",
-    path: path.resolve(__dirname, "dist")
+    libraryExport: "default"
   },
   module: {
     rules: [
@@ -22,20 +21,15 @@ module.exports = {
         test: /\.ts$/,
         loader: "ts-loader",
         exclude: /node_modules/
-      },
-      {
-        test: /\.(js|ts)$/,
-        exclude: /node_modules/,
-        use: "raw-loader"
       }
     ]
   },
   plugins: [
     new ESLintPlugin({
-      extensions: [".js", ".ts", ".tsx"]
+      extensions: [".js", ".ts"]
     })
   ],
   resolve: {
-    extensions: [".ts", ".js", ".tsx"]
+    extensions: [".ts", ".js"]
   }
 };

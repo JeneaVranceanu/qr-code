@@ -1,6 +1,5 @@
 const { merge } = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const commonConfig = require("./webpack.config.common.js");
 const path = require("path");
 
@@ -14,22 +13,14 @@ module.exports = merge(commonConfig, {
   devServer: {
     watchFiles: [srcPath + "/**/*.html", srcPath + "/**/*.ts", srcPath + "/**/*.js"]
   },
-  watchOptions: {
-    aggregateTimeout: 500,
-    poll: 1000
-  },
+  // watchOptions: {
+  //   aggregateTimeout: 500,
+  //   poll: 1000
+  // },
   plugins: [
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [
-        libPath + "/**/*.ts",
-        libPath + "/**/*.js",
-        libPath + "/**/*.html",
-        libPath + "/**/*.css"
-      ]
-    }),
     new HtmlWebpackPlugin({
       title: "Development",
-      template: srcPath + "/index.html",
+      template: path.resolve(srcPath, "index.html"),
       inject: "head",
       scriptLoading: "blocking"
     })
