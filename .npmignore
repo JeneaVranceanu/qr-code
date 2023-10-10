@@ -6,7 +6,9 @@ src
 .gitignore
 .prettierrc.js
 jest.config.js
+jestSetupFile.js
 tsconfig.json
+release.config.js
 webpack.config.build.js
 webpack.config.common.js
 webpack.config.dev-server.js
