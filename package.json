@@ -1,5 +1,5 @@
 {
-  "name": "qr-code-styling",
+  "name": "qr-code",
   "version": "2.0.0-alpha1",
   "description": "Add a style and an image to your QR code",
   "main": "lib/qr-code-styling.js",
@@ -65,10 +65,13 @@
     "logo",
     "design"
   ],
-  "author": "Denys Kozak <kozak.denys.dev@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/JeneaVranceanu/qr-code-styling/issues"
   },
-  "homepage": "https://qr-code-styling.com"
+  "homepage": "https://qr-code-styling.com",
+  "directories": {
+    "lib": "lib"
+  },
+  "author": ""
 }

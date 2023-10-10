@@ -253,4 +253,4 @@ const extension = (svg, options) => {
 
 ### License
 
-[MIT License](https://raw.githubusercontent.com/JeneaVranceanu/qr-code-styling/master/LICENSE). Copyright (c) 2023 Denys Kozak, Jenea Vranceanu
+[MIT License](https://raw.githubusercontent.com/JeneaVranceanu/qr-code-styling/master/LICENSE). Copyright (c) 2023 Jenea Vranceanu
