@@ -88,7 +88,7 @@ export default class QRSVG {
     const imageCenterX = count / 2;
     const imageCenterY = count / 2;
     // A rectangle where we consider hiding QR code dots.
-    // Used only if there's an image and it succesfully loaded.
+    // Used only if there's an image and it successfully loaded.
     // Each coordinate is not a pixel value but an x,y of a QR code dot.
     // e.g. a 500x500 QR code may have 36x36 number of dots,
     // `xStart` and `yStart` could be set to 18 and `xEnd`, `yEnd` to 21 (in case of small image).
